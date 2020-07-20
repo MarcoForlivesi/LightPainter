@@ -31,6 +31,12 @@ void AVRPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+	UPainterSaveGame* Painting = UPainterSaveGame::Create();
+	if (Painting && Painting->Save())
+	{
+		CurrentSlotName = Painting->GetSlotName();
+	}
+
 	RightHandController = GetWorld()->SpawnActor<AHandControllerBase>(HandControllerClass);
 	RightHandController->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::SnapToTargetIncludingScale);
 	RightHandController->SetOwner(this);
@@ -65,7 +71,13 @@ void AVRPawn::RightTriggerReleased()
 
 void AVRPawn::Save()
 {
-	UPainterSaveGame* Painting = UPainterSaveGame::Create();
+	UPainterSaveGame* Painting = UPainterSaveGame::Load(CurrentSlotName);
+
+	if (Painting == nullptr)
+	{
+		return;
+	}
+
 	Painting->SetState("Hello World!");
 	Painting->SerializeFromWorld(GetWorld());
 	Painting->Save();
@@ -73,7 +85,7 @@ void AVRPawn::Save()
 
 void AVRPawn::Load()
 {
-	UPainterSaveGame* Painting = UPainterSaveGame::Load();
+	UPainterSaveGame* Painting = UPainterSaveGame::Load(CurrentSlotName);
 
 	if (Painting)
 	{

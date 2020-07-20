@@ -39,4 +39,7 @@ private:
 
 	UPROPERTY()
 	class AHandControllerBase* RightHandController;
+
+	// State
+	FString CurrentSlotName;
 };
