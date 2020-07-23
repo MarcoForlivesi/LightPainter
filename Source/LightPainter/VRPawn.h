@@ -25,7 +25,6 @@ private:
 	void RightTriggerReleased();
 
 	void Save();
-	void Load();
 
 	// Config
 	UPROPERTY(EditDefaultsOnly)

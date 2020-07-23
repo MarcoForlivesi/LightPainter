@@ -3,28 +3,29 @@
 
 #include "PaintingGrid.h"
 
+#include "PaintingGridCard.h"
+
 #include "Components/UniformGridPanel.h"
 #include "Components/SizeBox.h"
 
-void UPaintingGrid::AddPainting()
+void UPaintingGrid::AddPainting(int32 PaintingIndex, FString PaintingName)
 {
 	if (PaintingGrid == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("PaintingGrid is null"));
 		return;
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("Grid Name: %s"), *PaintingGrid->GetName());
-
 	
-	UUserWidget* NewWidget = CreateWidget<UUserWidget>(GetWorld(), GridCardClass);
+	UPaintingGridCard* NewWidget = CreateWidget<UPaintingGridCard>(GetWorld(), GridCardClass);
 	if (NewWidget == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Grid Card Widget is null"));
+		UE_LOG(LogTemp, Warning, TEXT("UPaintingGridCard Widget is null"));
 		return;
 	}
 
-	USizeBox* CardContainer = Cast<USizeBox>(PaintingGrid->GetChildAt(0));
+	NewWidget->SetPaintingName(PaintingName);
+
+	USizeBox* CardContainer = Cast<USizeBox>(PaintingGrid->GetChildAt(PaintingIndex));
 	if (CardContainer == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Painting Grid child doesn't contains a SizeBox"));
@@ -32,9 +33,4 @@ void UPaintingGrid::AddPainting()
 	}
 
 	CardContainer->AddChild(NewWidget);
-
-	/*for (int i = 0; i < GetchildCount(); ++i)
-	{
-
-	}*/
 }

@@ -4,6 +4,7 @@
 #include "PaintingPicker.h"
 
 #include "PaintingGrid.h"
+#include "../../Saving/PainterSaveGameIndex.h"
 
 #include "Components/SceneComponent.h"
 #include "Components/WidgetComponent.h"
@@ -35,5 +36,11 @@ void APaintingPicker::BeginPlay()
 		return;
 	}
 
-	PaintingGridWidget->AddPainting();
+	int32 Index = 0;
+	TArray<FString> SlotNameList = UPainterSaveGameIndex::Load()->GetSlotNames();
+	for (FString SlotName : SlotNameList)
+	{
+		PaintingGridWidget->AddPainting(Index, SlotName);
+		++Index;
+	}
 }
