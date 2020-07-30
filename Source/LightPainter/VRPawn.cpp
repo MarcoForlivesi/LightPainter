@@ -5,6 +5,7 @@
 #include "HandControllerBase.h"
 
 #include "Saving/PainterSaveGame.h"
+
 #include "PaintingGameMode.h"
 
 #include "Camera\CameraComponent.h"
@@ -32,15 +33,21 @@ void AVRPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UPainterSaveGame* Painting = UPainterSaveGame::Create();
-	if (Painting && Painting->Save())
+	if (RightHandControllerClass != nullptr)
 	{
-		CurrentSlotName = Painting->GetSlotName();
+		RightHandController = GetWorld()->SpawnActor<AHandControllerBase>(RightHandControllerClass);
+		RightHandController->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::SnapToTargetIncludingScale);
+		RightHandController->SetHand(EControllerHand::Right);
+		RightHandController->SetOwner(this);
 	}
 
-	RightHandController = GetWorld()->SpawnActor<AHandControllerBase>(HandControllerClass);
-	RightHandController->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::SnapToTargetIncludingScale);
-	RightHandController->SetOwner(this);
+	if (LeftHandControllerClass != nullptr)
+	{
+		LeftHandController = GetWorld()->SpawnActor<AHandControllerBase>(LeftHandControllerClass);
+		LeftHandController->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::SnapToTargetIncludingScale);
+		LeftHandController->SetHand(EControllerHand::Left);
+		LeftHandController->SetOwner(this);
+	}
 }
 
 void AVRPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

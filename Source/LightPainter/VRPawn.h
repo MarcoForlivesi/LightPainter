@@ -28,7 +28,9 @@ private:
 
 	// Config
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class AHandControllerBase> HandControllerClass;
+	TSubclassOf<class AHandControllerBase> RightHandControllerClass;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class AHandControllerBase> LeftHandControllerClass;
 
 	UPROPERTY(VisibleAnywhere)
 	class USceneComponent* VRRoot;
@@ -38,7 +40,6 @@ private:
 
 	UPROPERTY()
 	class AHandControllerBase* RightHandController;
-
-	// State
-	FString CurrentSlotName;
+	UPROPERTY()
+	class AHandControllerBase* LeftHandController;
 };
