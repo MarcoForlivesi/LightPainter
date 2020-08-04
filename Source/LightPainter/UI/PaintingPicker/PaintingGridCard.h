@@ -16,7 +16,6 @@ class LIGHTPAINTER_API UPaintingGridCard : public UUserWidget
 
 public:
 	void SetPaintingName(FString PaintingName);
-
 protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (BindWidget))
 	class UTextBlock* SlotName;

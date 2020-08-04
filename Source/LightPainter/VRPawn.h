@@ -24,7 +24,7 @@ private:
 	void RightTriggerPressed();
 	void RightTriggerReleased();
 
-	void Save();
+	void PaginateRightAxisInput(float AxisValue);
 
 	// Config
 	UPROPERTY(EditDefaultsOnly)

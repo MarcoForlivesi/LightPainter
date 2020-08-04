@@ -22,12 +22,21 @@ protected:
 	virtual void BeginPlay() override;
 
 
-private:	
+private:
+	void Refresh();
 	void RefreshSlots();
+	void RefreshDots();
+	int32 GetNumberOfPages() const;
+	class UPaintingGrid* GetPaintingGrid() const;
 	
+	// Components
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* PaintingGrid;
 
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* ActionBar;
+
+	// State
+	UPROPERTY(EditAnywhere)
+	int32 CurrentPage = 0;
 };

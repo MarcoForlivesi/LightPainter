@@ -4,9 +4,13 @@
 #include "PaintingGrid.h"
 
 #include "PaintingGridCard.h"
+#include "PaginationDot.h"
 
 #include "Components/UniformGridPanel.h"
 #include "Components/SizeBox.h"
+#include "Components/HorizontalBox.h"
+#include "Components/HorizontalBoxSlot.h"
+
 
 void UPaintingGrid::AddPainting(int32 PaintingIndex, FString PaintingName)
 {
@@ -19,7 +23,7 @@ void UPaintingGrid::AddPainting(int32 PaintingIndex, FString PaintingName)
 	UPaintingGridCard* NewWidget = CreateWidget<UPaintingGridCard>(GetWorld(), GridCardClass);
 	if (NewWidget == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("UPaintingGridCard Widget is null"));
+		UE_LOG(LogTemp, Warning, TEXT("GridCardClass Widget is null"));
 		return;
 	}
 
@@ -48,4 +52,33 @@ void UPaintingGrid::ClearPaintings()
 
 		CardContainer->ClearChildren();
 	}
+}
+
+void UPaintingGrid::ClearPaginationDots()
+{
+	if (PaginationDotsContainer == nullptr)
+	{
+		return;
+	}
+
+	PaginationDotsContainer->ClearChildren();
+}
+
+int32 UPaintingGrid::GetNumberOfSlots() const
+{
+	return PaintingGrid->GetChildrenCount();
+}
+
+void UPaintingGrid::AddPaginationDot(bool Active)
+{
+	UPaginationDot* DotWidget = CreateWidget<UPaginationDot>(GetWorld(), PaginationDotClass);
+	if (DotWidget == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PaginationDotClass Widget is null"));
+		return;
+	}
+	DotWidget->SetActive(Active);
+
+	UHorizontalBoxSlot* DotSlot = PaginationDotsContainer->AddChildToHorizontalBox(DotWidget);
+	DotSlot->SetPadding(FMargin(PaginationDotPadding));
 }

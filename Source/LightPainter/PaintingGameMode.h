@@ -18,6 +18,9 @@ public:
 
 	void Save();
 	void Load();
+
+	UFUNCTION(BluePrintCallable)
+	void SaveAndQuit();
 protected:
 	void BeginPlay() override;
 private:

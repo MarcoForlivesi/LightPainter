@@ -31,27 +31,23 @@ void APaintingPicker::AddPainting()
 {
 	UPainterSaveGame::Create();
 
-	RefreshSlots();
+	Refresh();
 }
 
 void APaintingPicker::ToggleDeleteMode()
 {
-	UPaintingGrid* PaintingGridWidget = Cast<UPaintingGrid>(PaintingGrid->GetUserWidgetObject());
-	if (PaintingGridWidget == nullptr)
+	if (GetPaintingGrid() == nullptr)
 	{
 		return;
 	}
 
-	PaintingGridWidget->ClearPaintings();
+	GetPaintingGrid()->ClearPaintings();
 }
 
 // Called when the game starts or when spawned
 void APaintingPicker::BeginPlay()
 {
 	Super::BeginPlay();
-
-	RefreshSlots();
-
 	UActionBar* ActionBarWidget = Cast<UActionBar>(ActionBar->GetUserWidgetObject());
 	if (ActionBarWidget == nullptr)
 	{
@@ -59,23 +55,63 @@ void APaintingPicker::BeginPlay()
 	}
 
 	ActionBarWidget->SetParentPicker(this);
+	Refresh();
+}
+
+void APaintingPicker::Refresh()
+{
+	RefreshSlots();
+	RefreshDots();
 }
 
 void APaintingPicker::RefreshSlots()
 {
-	UPaintingGrid* PaintingGridWidget = Cast<UPaintingGrid>(PaintingGrid->GetUserWidgetObject());
-	if (PaintingGridWidget == nullptr)
+	UE_LOG(LogTemp, Warning, TEXT("Number of Pages %d"), GetNumberOfPages());
+
+	if (GetPaintingGrid() == nullptr)
 	{
 		return;
 	}
 
-	PaintingGridWidget->ClearPaintings();
+	GetPaintingGrid()->ClearPaintings();
 
 	int32 Index = 0;
 	TArray<FString> SlotNameList = UPainterSaveGameIndex::Load()->GetSlotNames();
 	for (FString SlotName : SlotNameList)
 	{
-		PaintingGridWidget->AddPainting(Index, SlotName);
+		GetPaintingGrid()->AddPainting(Index, SlotName);
 		++Index;
 	}
+}
+
+void APaintingPicker::RefreshDots()
+{
+	if (GetPaintingGrid() == nullptr)
+	{
+		return;
+	}
+
+	GetPaintingGrid()->ClearPaginationDots();
+
+	for (int32 i = 0; i < GetNumberOfPages(); i++)
+	{
+		GetPaintingGrid()->AddPaginationDot(CurrentPage == i);
+	}
+}
+
+int32 APaintingPicker::GetNumberOfPages() const
+{
+	if (GetPaintingGrid() == nullptr)
+	{
+		return 0;
+	}
+
+	int32 TotalNumberOfSlots = UPainterSaveGameIndex::Load()->GetSlotNames().Num();
+	int32 SlotPerPage = GetPaintingGrid()->GetNumberOfSlots();
+	return FMath::CeilToInt((float) TotalNumberOfSlots / SlotPerPage);
+}
+
+UPaintingGrid* APaintingPicker::GetPaintingGrid() const
+{
+	return Cast<UPaintingGrid>(PaintingGrid->GetUserWidgetObject());
 }

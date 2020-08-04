@@ -57,7 +57,7 @@ void AVRPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction(TEXT("RightTrigger"), EInputEvent::IE_Pressed, this, &AVRPawn::RightTriggerPressed);
 	PlayerInputComponent->BindAction(TEXT("RightTrigger"), EInputEvent::IE_Released, this, &AVRPawn::RightTriggerReleased);
 
-	PlayerInputComponent->BindAction(TEXT("Save"), EInputEvent::IE_Pressed, this, &AVRPawn::Save);
+	PlayerInputComponent->BindAxis(TEXT("PaginateRight"), this, &AVRPawn::PaginateRightAxisInput);
 }
 
 void AVRPawn::RightTriggerPressed()
@@ -76,15 +76,7 @@ void AVRPawn::RightTriggerReleased()
 	}
 }
 
-void AVRPawn::Save()
+void AVRPawn::PaginateRightAxisInput(float AxisValue)
 {
-	AGameModeBase* GameMode = GetWorld()->GetAuthGameMode();
-	APaintingGameMode* PaintingGameMode = Cast<APaintingGameMode>(GameMode);
-	if (PaintingGameMode == nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("%s is not a PaintingGameMode"), *GameMode->GetName());
-		return;
-	}
-	PaintingGameMode->Save();
 
-	UGameplayStatics::OpenLevel(GetWorld(), TEXT("MainMenu"));
 }

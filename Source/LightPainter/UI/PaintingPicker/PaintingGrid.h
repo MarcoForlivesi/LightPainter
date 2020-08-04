@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-
+#include "Layout/Margin.h"
 
 #include "PaintingGrid.generated.h"
 
@@ -22,11 +22,24 @@ public:
 	void AddPainting(int32 PaintingIndex, FString PaintingName);
 
 	void ClearPaintings();
+	void ClearPaginationDots();
+
+	int32 GetNumberOfSlots() const;
+
+	void AddPaginationDot(bool Active);
 protected:
 	UPROPERTY(BlueprintReadonly, VisibleAnywhere, meta = (BindWidget))
 	class UUniformGridPanel* PaintingGrid;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (BindWidget))
+	class UHorizontalBox* PaginationDotsContainer;
 private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UPaintingGridCard> GridCardClass;
+	
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UPaginationDot> PaginationDotClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	float PaginationDotPadding = 8.0f;
 };
