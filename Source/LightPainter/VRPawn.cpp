@@ -5,7 +5,7 @@
 #include "HandControllerBase.h"
 
 #include "Saving/PainterSaveGame.h"
-
+#include "UI/PaintingPicker/PaintingPicker.h"
 #include "PaintingGameMode.h"
 
 #include "Camera\CameraComponent.h"
@@ -13,7 +13,7 @@
 #include "Components\SceneComponent.h"
 
 #include "Kismet/GameplayStatics.h"
-
+#include "EngineUtils.h"
 
 // Sets default values
 AVRPawn::AVRPawn()
@@ -78,5 +78,32 @@ void AVRPawn::RightTriggerReleased()
 
 void AVRPawn::PaginateRightAxisInput(float AxisValue)
 {
+	int32 PaginationOffset = 0;
+	if (AxisValue > PaginationThumbstickThreshold)
+	{
+		PaginationOffset = +1;
+	}
+	else if (AxisValue < -PaginationThumbstickThreshold)
+	{
+		PaginationOffset = -1;
+	}
+	else
+	{
+		PaginationOffset = 0;
+	}
 
+	if (PaginationOffset != LastPaginationOffset && PaginationOffset != 0)
+	{
+		UpdateCurentPage(PaginationOffset);
+	}
+
+	LastPaginationOffset = PaginationOffset;
+}
+
+void AVRPawn::UpdateCurentPage(int32 Offset)
+{
+	for (TActorIterator<APaintingPicker> PaintingPickerItr(GetWorld()); PaintingPickerItr; ++PaintingPickerItr)
+	{
+		PaintingPickerItr->UpdateCurrentPage(Offset);
+	}
 }

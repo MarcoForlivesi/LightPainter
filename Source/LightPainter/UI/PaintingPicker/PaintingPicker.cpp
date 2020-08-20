@@ -44,6 +44,13 @@ void APaintingPicker::ToggleDeleteMode()
 	GetPaintingGrid()->ClearPaintings();
 }
 
+void APaintingPicker::UpdateCurrentPage(int32 Offset)
+{
+	CurrentPage = FMath::Clamp(CurrentPage + Offset, 0, GetNumberOfPages() - 1);
+
+	Refresh();
+}
+
 // Called when the game starts or when spawned
 void APaintingPicker::BeginPlay()
 {
@@ -66,8 +73,6 @@ void APaintingPicker::Refresh()
 
 void APaintingPicker::RefreshSlots()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Number of Pages %d"), GetNumberOfPages());
-
 	if (GetPaintingGrid() == nullptr)
 	{
 		return;
@@ -75,10 +80,12 @@ void APaintingPicker::RefreshSlots()
 
 	GetPaintingGrid()->ClearPaintings();
 
+	int32 StartOffset = CurrentPage * GetPaintingGrid()->GetNumberOfSlots();
 	int32 Index = 0;
 	TArray<FString> SlotNameList = UPainterSaveGameIndex::Load()->GetSlotNames();
-	for (FString SlotName : SlotNameList)
+	for (int32 i = 0; i < GetPaintingGrid()->GetNumberOfSlots() && StartOffset + i < SlotNameList.Num(); ++i)
 	{
+		FString SlotName = SlotNameList[StartOffset + i];
 		GetPaintingGrid()->AddPainting(Index, SlotName);
 		++Index;
 	}
